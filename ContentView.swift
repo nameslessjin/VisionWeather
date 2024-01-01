@@ -171,35 +171,35 @@ class SnowFall: SKScene {
         
     }
 }
-//
-//class RainFallLanding: SKScene {
-//
-//    var frameSize: CGSize!
-//
-//    override init(size: CGSize) {
-//        super.init(size: size)
-//        self.scaleMode = .resizeFill
-//        self.backgroundColor = .clear
-//        self.anchorPoint = CGPoint(x: 0.5, y: 1)
-//    }
-//
-//    required init?(coder aDecoder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
-//
-//    override func sceneDidLoad() {
-//
-//        scaleMode = .resizeFill
-//
-//        backgroundColor = .clear
-//
-//
-//        anchorPoint = CGPoint(x: 0.5, y: 1)
-//
-//        // creating node and adding to scene
-//        let node = SKEmitterNode(fileNamed: "RainFallLanding.sks")!
-//        node.particlePositionRange.dx = self.size.width * 1.5
-//        addChild(node)
-//
-//    }
-//}
+
+class RainFallLanding: SKScene {
+
+    var frameSize: CGSize!
+
+    override init(size: CGSize) {
+        super.init(size: size)
+        self.scaleMode = .resizeFill
+        self.backgroundColor = .clear
+        self.anchorPoint = CGPoint(x: 0.5, y: 1)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func sceneDidLoad() {
+
+        scaleMode = .resizeFill
+
+        backgroundColor = .clear
+
+
+        anchorPoint = CGPoint(x: 0.5, y: 1)
+
+        // creating node and adding to scene
+        let node = SKEmitterNode(fileNamed: "RainFallLanding.sks")!
+        node.particlePositionRange.dx = self.size.width * 1.5
+        addChild(node)
+
+    }
+}
