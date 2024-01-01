@@ -13,7 +13,7 @@ struct BackgroundView: View {
     @State var weatherKitManager: WeatherKitManager
     @State private var colors: [String] = ["DaySky", "DayGround"]
     
-    func showStar(size: CGSize) -> some View {
+    func showCloud(size: CGSize) -> some View {
         
         // if clear and it is night then there is clear
         
@@ -22,9 +22,6 @@ struct BackgroundView: View {
         {
             switch currentCondition {
                 case .clear, .hot, .mostlyClear, .sleet:
-                    if !isDay {
-                        return AnyView(SpriteView(scene: Star(size: size), options: [.allowsTransparency]))
-                    }
                     return AnyView(Color.clear)
                 case .blizzard, .blowingSnow, .flurries, .frigid, .heavySnow, .snow, .sunFlurries, .cloudy, .mostlyCloudy, .partlyCloudy, .drizzle, .freezingDrizzle, .freezingRain, .hail, .heavyRain, .hurricane, .isolatedThunderstorms, .rain, .scatteredThunderstorms, .strongStorms, .sunShowers, .thunderstorms, .tropicalStorm, .wintryMix, .foggy, .haze, .smoky:
                 
@@ -38,6 +35,30 @@ struct BackgroundView: View {
         
         return AnyView(Color.clear)
     }
+    
+    func showStar(size: CGSize) -> some View {
+        
+        // if clear and it is night then there is clear
+        
+        if let currentCondition = weatherKitManager.currentWeather?.condition,
+           let isDay = weatherKitManager.currentWeather?.isDaylight
+        {
+            switch currentCondition {
+                case .clear, .hot, .mostlyClear, .sleet, .cloudy, .partlyCloudy, .mostlyCloudy:
+                        if !isDay {
+                            return AnyView(SpriteView(scene: Star(size: size), options: [.allowsTransparency]))
+                        }
+                        return AnyView(Color.clear)
+                default:
+                    return AnyView(Color.clear)
+            }
+            
+        }
+        
+        return AnyView(Color.clear)
+    }
+    
+    
     
     func pickBackgroundColor() {
         
@@ -76,7 +97,9 @@ struct BackgroundView: View {
                     startPoint: .top,
                     endPoint: .bottom
                 )
+                showCloud(size: geometry.size)
                 showStar(size: geometry.size)
+                
             }
         }
         .onAppear() {
