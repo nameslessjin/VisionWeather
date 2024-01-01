@@ -7,7 +7,7 @@
 
 import SwiftUI
 import RealityKit
-//import RealityKitContent
+import RealityKitContent
 import CoreLocation
 import SpriteKit
 
@@ -21,11 +21,46 @@ struct ContentView: View {
     
     @State var weatherKitManager: WeatherKitManager
     
+    
+    
+    func showSpriteView(size: CGSize) -> some View {
+        
+        if let currentCondition = weatherKitManager.currentWeather?.condition {
+            switch currentCondition {
+                
+            case .blizzard, .blowingSnow, .flurries, .frigid, .heavySnow, .snow, .sunFlurries:
+                return AnyView(SpriteView(scene: SnowFall(size: size), options: [.allowsTransparency]))
+            case .blowingDust, .breezy, .windy:
+
+                return AnyView(Color.clear)
+            case .clear, .hot, .mostlyClear, .sleet:
+
+                return AnyView(Color.clear)
+            case .cloudy, .mostlyCloudy, .partlyCloudy:
+
+                return AnyView(Color.clear)
+            case .drizzle, .freezingDrizzle, .freezingRain, .hail, .heavyRain, .hurricane, .isolatedThunderstorms, .rain, .scatteredThunderstorms, .strongStorms, .sunShowers, .thunderstorms, .tropicalStorm, .wintryMix:
+                return AnyView(SpriteView(scene: RainFall(size: size), options: [.allowsTransparency]))
+            case .foggy, .haze, .smoky:
+
+                return AnyView(Color.clear)
+            @unknown default:
+
+                return AnyView(Color.clear)
+            }
+        }
+        
+        return AnyView(Color.clear)
+    }
+    
     var body: some View {
         
         GeometryReader { geometry in
+            
             ZStack {
-                SpriteView(scene: SnowFall(size: geometry.size), options: [.allowsTransparency])
+                BackgroundView(weatherKitManager: weatherKitManager)
+
+                showSpriteView(size: geometry.size)
                     .frame(width: .infinity, height: .infinity)
                     .ignoresSafeArea()
                 
@@ -70,31 +105,6 @@ struct ContentView: View {
     }
 }
 
-struct MainTextView: View {
-    
-    @State var weatherKitManager: WeatherKitManager
-    
-    var body: some View {
-        
-        VStack {
-            Text(weatherKitManager.city)
-                .font(.system(size: 40, weight: .medium, design: .default))
-                .foregroundColor(.white)
-            
-            Text("\(weatherKitManager.temp)°")
-                .font(.system(size: 80, design: .default))
-            Text("\(weatherKitManager.condition)")
-                .font(.system(size: 28, weight: .medium, design: .default))
-            
-            HStack{
-                Text("H:\(weatherKitManager.dayHTemp)°")
-                    .font(.system(size: 28, weight: .medium, design: .default))
-                Text("L:\(weatherKitManager.dayLTemp)°")
-                    .font(.system(size: 28, weight: .medium, design: .default))
-            }
-        }
-    }
-}
 
 
 #Preview(windowStyle: .automatic) {
@@ -107,99 +117,3 @@ struct MainTextView: View {
         }
 }
 
-
-class RainFall: SKScene {
-    
-    var frameSize: CGSize!
-    
-    override init(size: CGSize) {
-        super.init(size: size)
-        self.scaleMode = .resizeFill
-        self.backgroundColor = .clear
-        self.anchorPoint = CGPoint(x: 0.5, y: 1)
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func sceneDidLoad() {
-        
-        scaleMode = .resizeFill
-        
-        backgroundColor = .clear
-        
-        anchorPoint = CGPoint(x: 0.5, y: 1)
-        
-        // creating node and adding to scene
-        let node = SKEmitterNode(fileNamed: "RainFall.sks")!
-        node.particlePositionRange.dx = self.size.width * 1.5
-        addChild(node)
-        
-    }
-}
-
-class SnowFall: SKScene {
-    
-    var frameSize: CGSize!
-    
-    override init(size: CGSize) {
-        super.init(size: size)
-        self.scaleMode = .resizeFill
-        self.backgroundColor = .clear
-        self.anchorPoint = CGPoint(x: 0.5, y: 1)
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func sceneDidLoad() {
-        
-//        size = view.bounds.size
-        
-        scaleMode = .resizeFill
-        
-        backgroundColor = .clear
-        
-        anchorPoint = CGPoint(x: 0.5, y: 1)
-        
-        // creating node and adding to scene
-        let node = SKEmitterNode(fileNamed: "SnowFall.sks")!
-        node.particlePositionRange.dx = self.size.width * 1.5
-        addChild(node)
-        
-    }
-}
-
-class RainFallLanding: SKScene {
-
-    var frameSize: CGSize!
-
-    override init(size: CGSize) {
-        super.init(size: size)
-        self.scaleMode = .resizeFill
-        self.backgroundColor = .clear
-        self.anchorPoint = CGPoint(x: 0.5, y: 1)
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    override func sceneDidLoad() {
-
-        scaleMode = .resizeFill
-
-        backgroundColor = .clear
-
-
-        anchorPoint = CGPoint(x: 0.5, y: 1)
-
-        // creating node and adding to scene
-        let node = SKEmitterNode(fileNamed: "RainFallLanding.sks")!
-        node.particlePositionRange.dx = self.size.width * 1.5
-        addChild(node)
-
-    }
-}
