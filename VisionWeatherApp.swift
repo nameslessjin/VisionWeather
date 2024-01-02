@@ -15,15 +15,20 @@ struct VisionWeatherApp: App {
     @State var weatherKitManager = WeatherKitManager()
     
     var body: some Scene {
+        
+        
+        
         WindowGroup {
             ContentView(weatherKitManager: weatherKitManager)
                 .task {
                     await weatherKitManager.getWeather()
                 }
         }
+        .defaultSize(width: 1500, height: 900)
 
         ImmersiveSpace(id: "ImmersiveSpace") {
-            ImmersiveView()
-        }.immersionStyle(selection: .constant(.progressive), in: .progressive)
+            ImmersiveView(weatherKitManager: weatherKitManager)
+        }
+        //.immersionStyle(selection: .constant(.progressive), in: .progressive)
     }
 }

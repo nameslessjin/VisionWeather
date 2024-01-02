@@ -33,7 +33,7 @@ struct HourlyForecastView: View {
     func createHourlyForecastTrendChartView() -> some View {
         VStack(alignment: .leading) {
             Text("Hourly Weather Forecast")
-                .font(.system(size: 20))
+                .font(.system(size: 24))
             
             Rectangle()
                 .frame(height: 1)
@@ -67,6 +67,7 @@ struct HourlyForecastView: View {
                                 .frame(width: 7, height: 7)
                                 .foregroundStyle(.white)
                             Text("\(temperature)°")
+                                .font(.system(size: 24))
                                 .offset(y: -20)
                                 .foregroundStyle(.white)
                         }
@@ -81,7 +82,7 @@ struct HourlyForecastView: View {
                 AxisMarks(position: .leading) { value in
                     AxisValueLabel{
                         Text(String(format: "%d", value.as(Int.self) ?? 0))
-                            .font(.system(size: 20, weight: .medium))
+                            .font(.system(size: 24, weight: .medium))
                     }
                     AxisTick(stroke: StrokeStyle(lineWidth: 0.5))
                 }
@@ -90,7 +91,7 @@ struct HourlyForecastView: View {
                 AxisMarks { value in
                     AxisValueLabel {
                         Text(String(value.as(String.self) ?? "Now"))
-                            .font(.system(size: 20, weight: .medium))
+                            .font(.system(size: 24, weight: .medium))
                     }
                 }
             }

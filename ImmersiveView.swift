@@ -10,26 +10,76 @@ import RealityKit
 import RealityKitContent
 
 struct ImmersiveView: View {
+    
+    @State var weatherKitManager: WeatherKitManager
+    
+    @State var headEntity: Entity = {
+        let headAnchor = AnchorEntity(.head)
+        headAnchor.position = [0, -0.3, 0.1]
+        return headAnchor
+    }()
+    
+    func selectWeatherEntity() -> String {
+        var weatherEntity = "DefaultScene"
+        if let condition = weatherKitManager.currentWeather?.condition {
+            
+            switch condition {
+                
+            case .blizzard, .blowingSnow, .flurries, .frigid, .heavySnow, .snow, .sunFlurries:
+                weatherEntity = "SnowScene"
+                break;
+            case .blowingDust, .breezy, .windy:
+
+                break;
+            case .clear, .hot, .mostlyClear, .sleet:
+
+                break;
+            case .cloudy, .mostlyCloudy, .partlyCloudy:
+                weatherEntity = "CloudScene"
+                break;
+            case .drizzle, .freezingDrizzle, .freezingRain, .hail, .heavyRain, .hurricane, .isolatedThunderstorms, .rain, .scatteredThunderstorms, .strongStorms, .sunShowers, .thunderstorms, .tropicalStorm, .wintryMix:
+                weatherEntity = "RainScene"
+                break
+            case .foggy, .haze, .smoky:
+                break;
+            @unknown default:
+                break;
+            }
+        }
+        
+        return weatherEntity
+    }
+    
     var body: some View {
         RealityView { content in
-            // Add the initial RealityKit content
-            if let immersiveContentEntity = try? await Entity(named: "Immersive", in: realityKitContentBundle) {
-                content.add(immersiveContentEntity)
-
-                // Add an ImageBasedLight for the immersive content
-                guard let resource = try? await EnvironmentResource(named: "ImageBasedLight") else { return }
-                let iblComponent = ImageBasedLightComponent(source: .single(resource), intensityExponent: 0.25)
-                immersiveContentEntity.components.set(iblComponent)
-                immersiveContentEntity.components.set(ImageBasedLightReceiverComponent(imageBasedLight: immersiveContentEntity))
-
-                // Put skybox here.  See example in World project available at
-                // https://developer.apple.com/
+            
+            do {
+                let weatherEntity = try await Entity(named: "CloudScene", in: realityKitContentBundle)
+                headEntity.addChild(weatherEntity)
+                content.add(headEntity)
+            } catch {
+                print("Error in RealityView's make: \(error)")
             }
         }
     }
 }
 
-#Preview {
-    ImmersiveView()
-        .previewLayout(.sizeThatFits)
+//#Preview {
+//    let weatherKitManager = WeatherKitManager()
+//    
+//    ImmersiveView(weatherKitManager: weatherKitManager)
+//        .previewLayout(.sizeThatFits)
+//        .task {
+//            await weatherKitManager.getWeather()
+//        }
+//}
+
+struct ImmersiveView_Previews: PreviewProvider {
+    static var previews: some View {
+        let weatherKitManager = WeatherKitManager()
+        ImmersiveView(weatherKitManager: weatherKitManager)
+            .task {
+                await weatherKitManager.getWeather()
+            }
+    }
 }

@@ -13,7 +13,7 @@ import SpriteKit
 
 struct ContentView: View {
 
-    @State private var showImmersiveSpace = false
+    @State private var showImmersiveSpace = true
     @State private var immersiveSpaceIsShown = false
 
     @Environment(\.openImmersiveSpace) var openImmersiveSpace
@@ -61,7 +61,6 @@ struct ContentView: View {
                 BackgroundView(weatherKitManager: weatherKitManager)
 
                 showSpriteView(size: geometry.size)
-                    .frame(width: .infinity, height: .infinity)
                     .ignoresSafeArea()
                 
                 ScrollView(.vertical, showsIndicators: false) {
@@ -82,6 +81,9 @@ struct ContentView: View {
                 .padding()
                 .frame(width: geometry.size.width * 0.8)
             }
+        }
+        .task {
+            await openImmersiveSpace(id: "ImmersiveSpace")
         }
         
 //        .onChange(of: showImmersiveSpace) { _, newValue in

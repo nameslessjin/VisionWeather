@@ -17,8 +17,7 @@ struct BackgroundView: View {
         
         // if clear and it is night then there is clear
         
-        if let currentCondition = weatherKitManager.currentWeather?.condition,
-           let isDay = weatherKitManager.currentWeather?.isDaylight
+        if let currentCondition = weatherKitManager.currentWeather?.condition
         {
             switch currentCondition {
                 case .clear, .hot, .mostlyClear, .sleet:

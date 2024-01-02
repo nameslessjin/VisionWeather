@@ -91,7 +91,6 @@ struct DayForecastView: View {
                     let lTemp = Int(round(weatherData.lowTemperature.converted(to: .fahrenheit).value))
                     let hTemp = Int(round(weatherData.highTemperature.converted(to: .fahrenheit).value))
                     
-                    let calendar = Calendar.current
                     let day = weatherData == weatherKitManager.dayWeather.first
                                 ? "Today"
                                 :  getAbbreviatedWeekDay(from: weatherData.date)
@@ -119,7 +118,7 @@ struct DayForecastView: View {
                             Text("\(hTemp)°")
                                 .offset(y: -17)
                                 .foregroundStyle(.white)
-                                .font(.system(size: 20, weight: .medium))
+                                .font(.system(size: 24, weight: .medium))
                         }
                     
                     PointMark(x: .value("Day", day), y: .value("Temp", lTemp))
@@ -127,7 +126,7 @@ struct DayForecastView: View {
                             Text("\(lTemp)°")
                                 .offset(y: 20)
                                 .foregroundStyle(.white)
-                                .font(.system(size: 20, weight: .medium))
+                                .font(.system(size: 24, weight: .medium))
                         }
                 }
 
@@ -138,7 +137,7 @@ struct DayForecastView: View {
                 AxisMarks(position: .leading) { value in
                     AxisValueLabel {
                         Text(String(format: "%d", value.as(Int.self) ?? 0))
-                            .font(.system(size: 20, weight: .medium))
+                            .font(.system(size: 24, weight: .medium))
                     }
                     AxisTick(stroke: StrokeStyle(lineWidth: 0.5))
                 }
@@ -147,7 +146,7 @@ struct DayForecastView: View {
                 AxisMarks { value in
                     AxisValueLabel {
                         Text(String(value.as(String.self) ?? "Today"))
-                            .font(.system(size: 20, weight: .medium))
+                            .font(.system(size: 24, weight: .medium))
                     }
                 }
             }
