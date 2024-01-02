@@ -19,9 +19,7 @@ struct ContentView: View {
     @Environment(\.openImmersiveSpace) var openImmersiveSpace
     @Environment(\.dismissImmersiveSpace) var dismissImmersiveSpace
     
-    @State var weatherKitManager: WeatherKitManager
-    
-    
+    var weatherKitManager: WeatherKitManager
     
     func showSpriteView(size: CGSize) -> some View {
         

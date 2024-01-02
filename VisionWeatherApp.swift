@@ -12,11 +12,9 @@ import CoreLocation
 @main
 struct VisionWeatherApp: App {
     
-    @State var weatherKitManager = WeatherKitManager()
+    var weatherKitManager = WeatherKitManager()
     
     var body: some Scene {
-        
-        
         
         WindowGroup {
             ContentView(weatherKitManager: weatherKitManager)
@@ -28,6 +26,7 @@ struct VisionWeatherApp: App {
 
         ImmersiveSpace(id: "ImmersiveSpace") {
             ImmersiveView(weatherKitManager: weatherKitManager)
+//            ImmersiveView()
         }
         //.immersionStyle(selection: .constant(.progressive), in: .progressive)
     }

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MainTextView: View {
     
-    @State var weatherKitManager: WeatherKitManager
+    var weatherKitManager: WeatherKitManager
     
     var body: some View {
         

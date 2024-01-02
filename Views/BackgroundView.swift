@@ -10,7 +10,7 @@ import SpriteKit
 
 struct BackgroundView: View {
     
-    @State var weatherKitManager: WeatherKitManager
+    var weatherKitManager: WeatherKitManager
     @State private var colors: [String] = ["DaySky", "DayGround"]
     
     func showCloud(size: CGSize) -> some View {
@@ -106,7 +106,6 @@ struct BackgroundView: View {
         }
         .onChange(of: weatherKitManager.currentWeather) { _, _ in
             pickBackgroundColor()
-            print(self.colors)
         }
     }
 }

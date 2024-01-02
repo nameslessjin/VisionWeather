@@ -11,7 +11,7 @@ import WeatherKit
 
 struct HourlyForecastView: View {
     
-    @State var weatherKitManager: WeatherKitManager
+    var weatherKitManager: WeatherKitManager
     
     @State private var minTemp = 30;
     @State private var maxTemp = 75;

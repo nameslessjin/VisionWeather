@@ -11,7 +11,7 @@ import Charts
 let eps: Float = 0.0001
 struct DayForecastView: View {
     
-    @State var weatherKitManager: WeatherKitManager
+    var weatherKitManager: WeatherKitManager
     
     @State private var minTemp = 30;
     @State private var maxTemp = 75;

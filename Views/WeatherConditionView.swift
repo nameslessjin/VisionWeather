@@ -9,7 +9,7 @@ import SwiftUI
 
 struct WeatherConditionView: View {
     // feels like, humidity, pressure, UV index, Visibility, wind
-    @State var weatherKitManager: WeatherKitManager
+    var weatherKitManager: WeatherKitManager
     
     func createNewsView() -> some View {
         

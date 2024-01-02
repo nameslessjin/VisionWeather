@@ -11,7 +11,9 @@ import RealityKitContent
 
 struct ImmersiveView: View {
     
-    @State var weatherKitManager: WeatherKitManager
+    //@Environment(WeatherKitManager.self) private var weatherKitManager
+    
+    var weatherKitManager: WeatherKitManager
     
     @State var headEntity: Entity = {
         let headAnchor = AnchorEntity(.head)
@@ -19,8 +21,10 @@ struct ImmersiveView: View {
         return headAnchor
     }()
     
-    func selectWeatherEntity() -> String {
-        var weatherEntity = "EmptyScene"
+    func selectWeatherEntity() -> String? {
+        
+        var weatherEntity : String? = nil
+        
         if let condition = weatherKitManager.currentWeather?.condition {
             
             switch condition {
@@ -28,21 +32,10 @@ struct ImmersiveView: View {
             case .blizzard, .blowingSnow, .flurries, .frigid, .heavySnow, .snow, .sunFlurries:
                 weatherEntity = "SnowScene"
                 break;
-            case .blowingDust, .breezy, .windy:
-
-                break;
-            case .clear, .hot, .mostlyClear, .sleet:
-
-                break;
-            case .cloudy, .mostlyCloudy, .partlyCloudy:
-                weatherEntity = "CloudScene"
-                break;
             case .drizzle, .freezingDrizzle, .freezingRain, .hail, .heavyRain, .hurricane, .isolatedThunderstorms, .rain, .scatteredThunderstorms, .strongStorms, .sunShowers, .thunderstorms, .tropicalStorm, .wintryMix:
                 weatherEntity = "RainScene"
                 break
-            case .foggy, .haze, .smoky:
-                break;
-            @unknown default:
+            default:
                 break;
             }
         }
@@ -50,18 +43,44 @@ struct ImmersiveView: View {
         return weatherEntity
     }
     
+    func addCloudEntity() -> String? {
+        
+        var cloudEntity : String? = nil
+        
+        print("Check Cloud")
+        print(weatherKitManager.currentWeather ?? "No Weather")
+        print("End Check Cloud")
+        
+        if let condition = weatherKitManager.currentWeather?.condition {
+            print(condition)
+            switch condition {
+                
+            case .blizzard, .blowingSnow, .flurries, .frigid, .heavySnow, .snow, .sunFlurries, .cloudy, .mostlyCloudy, .partlyCloudy, .drizzle, .freezingDrizzle, .freezingRain, .hail, .heavyRain, .hurricane, .isolatedThunderstorms, .rain, .scatteredThunderstorms, .strongStorms, .sunShowers, .thunderstorms, .tropicalStorm, .wintryMix:
+                cloudEntity = "CloudScene"
+                break;
+            default:
+                break;
+            }
+        }
+         print(cloudEntity ?? "No cloud")
+        return cloudEntity
+    }
+    
     var body: some View {
         RealityView { content in
             
             do {
-                let entityName = selectWeatherEntity()
-                let weatherEntity = try await Entity(named: "CloudScene", in: realityKitContentBundle)
-                
-                if entityName == "CloudScene" {
-                    // guard let particleEmitter = weatherEntity.children[0].components[ParticleEmitterComponent.self]?
+                if let entityName = selectWeatherEntity() {
+                    let weatherEntity = try await Entity(named: entityName, in: realityKitContentBundle)
+                    headEntity.addChild(weatherEntity)
                 }
                 
-                headEntity.addChild(weatherEntity)
+                if let cloudName = addCloudEntity() {
+                    let cloudEntity = try await Entity(named: cloudName, in: realityKitContentBundle)
+                    headEntity.addChild(cloudEntity)
+                    // guard let particleEmitter = cloudEntity.children[0].components[ParticleEmitterComponent.self]?
+                }
+
                 content.add(headEntity)
             } catch {
                 print("Error in RealityView's make: \(error)")
@@ -70,20 +89,13 @@ struct ImmersiveView: View {
     }
 }
 
-//#Preview {
-//    let weatherKitManager = WeatherKitManager()
-//    
-//    ImmersiveView(weatherKitManager: weatherKitManager)
-//        .previewLayout(.sizeThatFits)
-//        .task {
-//            await weatherKitManager.getWeather()
-//        }
-//}
-
 struct ImmersiveView_Previews: PreviewProvider {
     static var previews: some View {
         let weatherKitManager = WeatherKitManager()
         ImmersiveView(weatherKitManager: weatherKitManager)
+//        ImmersiveView()
+            .previewLayout(.sizeThatFits)
+//            .environment(weatherKitManager)
             .task {
                 await weatherKitManager.getWeather()
             }
