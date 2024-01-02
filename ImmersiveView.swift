@@ -15,12 +15,12 @@ struct ImmersiveView: View {
     
     @State var headEntity: Entity = {
         let headAnchor = AnchorEntity(.head)
-        headAnchor.position = [0, -0.3, 0.1]
+        headAnchor.position = [0, 0, -0.1]
         return headAnchor
     }()
     
     func selectWeatherEntity() -> String {
-        var weatherEntity = "DefaultScene"
+        var weatherEntity = "EmptyScene"
         if let condition = weatherKitManager.currentWeather?.condition {
             
             switch condition {
@@ -54,7 +54,13 @@ struct ImmersiveView: View {
         RealityView { content in
             
             do {
+                let entityName = selectWeatherEntity()
                 let weatherEntity = try await Entity(named: "CloudScene", in: realityKitContentBundle)
+                
+                if entityName == "CloudScene" {
+                    // guard let particleEmitter = weatherEntity.children[0].components[ParticleEmitterComponent.self]?
+                }
+                
                 headEntity.addChild(weatherEntity)
                 content.add(headEntity)
             } catch {
