@@ -47,12 +47,7 @@ struct ImmersiveView: View {
         
         var cloudEntity : String? = nil
         
-        print("Check Cloud")
-        print(weatherKitManager.currentWeather ?? "No Weather")
-        print("End Check Cloud")
-        
         if let condition = weatherKitManager.currentWeather?.condition {
-            print(condition)
             switch condition {
                 
             case .blizzard, .blowingSnow, .flurries, .frigid, .heavySnow, .snow, .sunFlurries, .cloudy, .mostlyCloudy, .partlyCloudy, .drizzle, .freezingDrizzle, .freezingRain, .hail, .heavyRain, .hurricane, .isolatedThunderstorms, .rain, .scatteredThunderstorms, .strongStorms, .sunShowers, .thunderstorms, .tropicalStorm, .wintryMix:
@@ -62,7 +57,6 @@ struct ImmersiveView: View {
                 break;
             }
         }
-         print(cloudEntity ?? "No cloud")
         return cloudEntity
     }
     
