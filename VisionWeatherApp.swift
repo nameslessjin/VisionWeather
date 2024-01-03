@@ -22,7 +22,7 @@ struct VisionWeatherApp: App {
 //            LocationSearchView()
                 .onAppear() {
                     Task {
-                        await weatherKitManager.getWeather(placemark: selectedPlacemark)
+                        await weatherKitManager.getWeather()
                     }
                 }
                 .onChange(of: selectedPlacemark) { _, _ in
@@ -35,6 +35,12 @@ struct VisionWeatherApp: App {
 
         ImmersiveSpace(id: "ImmersiveSpace") {
             ImmersiveView(weatherKitManager: weatherKitManager)
+                .onChange(of: weatherKitManager.condition) {
+                    print("weatherKitManager changed in VisionWeatherApp")
+                    if let cond = weatherKitManager.currentWeather?.condition {
+                        print("weatherKitManager changed in VisionWeatherApp Condition: \(cond.description)")
+                    }
+                }
 //            ImmersiveView()
         }
         //.immersionStyle(selection: .constant(.progressive), in: .progressive)

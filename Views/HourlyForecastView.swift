@@ -46,7 +46,8 @@ struct HourlyForecastView: View {
                     let calendar = Calendar.current
                     let hour = calendar.component(.hour, from: weatherData.date)
                     let currHour = calendar.component(.hour, from: Date())
-                    let hourString = hour == currHour ? "Now" : String(hour % 12 + 1)
+//                    let hourString = String(hour)
+                    let hourString = hour == currHour ? "Now" : String(hour <= 12 ? "\(hour)AM" : "\(hour % 12)PM")
                 
                     LineMark(x: .value("Hour", hourString),
                              y: .value("Temp", temperature))
@@ -57,7 +58,7 @@ struct HourlyForecastView: View {
                               y: .value("Temp", temperature))
                     .symbol {
                         ZStack {
-                            Image(systemName: "\(weatherData.symbolName).fill")
+                            Image(systemName: "\(weatherData.symbolName)\(weatherData.symbolName == "snow" ? "" : ".fill")")
                                 .renderingMode(.original)
                                 .resizable()
                                 .scaledToFit()

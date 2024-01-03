@@ -101,6 +101,10 @@ struct LocationSearchView: View {
                     .stroke(Color("NewsWindowColor"), lineWidth: 2)
                     .opacity(isTextFieldFocus ? 1 : 0)
             )
+            .background(
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(Color("TextField").opacity(0.3))
+            )
             .padding(.top)
             .padding(.horizontal, 30)
             
@@ -110,7 +114,7 @@ struct LocationSearchView: View {
                         .font(.system(size: 32))
                         .onTapGesture {
                             guard let title = result.title else { return }
-                            getCoordinatesFromCityName(cityName: title)
+                            // getCoordinatesFromCityName(cityName: title)
                             searchCompleter.isOpen = false
                             self.selectedPlacemark = result
                             searchText = title
@@ -129,18 +133,17 @@ struct LocationSearchView: View {
         }
     }
     
-    private func getCoordinatesFromCityName(cityName: String) {
-        let geocoder = CLGeocoder()
-        geocoder.geocodeAddressString(cityName) { (placemarks, error) in
-            guard let placemarks = placemarks,
-                  let location = placemarks.first?.location 
-            else {
-                print("No location found")
-                return
-            }
-            print("Location: \(location.coordinate.latitude), \(location.coordinate.longitude)")
-        }
-    }
+//    private func getCoordinatesFromCityName(cityName: String) {
+//        let geocoder = CLGeocoder()
+//        geocoder.geocodeAddressString(cityName) { (placemarks, error) in
+//            guard let placemarks = placemarks,
+//                  let location = placemarks.first?.location 
+//            else {
+//                print("No location found")
+//                return
+//            }
+//        }
+//    }
     
     private func debounceSearch(text: String) {
         debounceTask?.cancel() // cancel previous task

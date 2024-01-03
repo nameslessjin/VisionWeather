@@ -16,8 +16,8 @@ struct NewsView: View {
 //            Image(systemName: "newspaper.fill")
 //                .resizable()
 //                .frame(width: 50, height: 50)
-            Text(news)
-                .font(.system(size: 24, weight: .medium))
+            Text("Alert: \(news)")
+                .font(.system(size: 30, weight: .medium))
             
         }
         .foregroundColor(.white)

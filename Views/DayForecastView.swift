@@ -105,7 +105,7 @@ struct DayForecastView: View {
                     
                     PointMark(x: .value("Day", day), y: .value("Temp", hTemp))
                     .symbol {
-                        Image(systemName: "\(weatherData.symbolName).fill")
+                        Image(systemName: "\(weatherData.symbolName)\(weatherData.symbolName == "snow" ? "" : ".fill")")
                             .renderingMode(.original)
                             .resizable()
                             .scaledToFit()

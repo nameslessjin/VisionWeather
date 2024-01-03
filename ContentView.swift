@@ -11,6 +11,7 @@ import RealityKitContent
 import CoreLocation
 import SpriteKit
 import MapKit
+import WeatherKit
 
 struct ContentView: View {
 
@@ -24,6 +25,7 @@ struct ContentView: View {
     @Binding var selectedPlacemark: MKPlacemark?
     
     var weatherKitManager: WeatherKitManager
+    var weatherAttrib: WeatherAttribution?
     
     func showSpriteView(size: CGSize) -> some View {
         
@@ -80,6 +82,9 @@ struct ContentView: View {
                             HourlyForecastView(weatherKitManager: weatherKitManager)
                             
                             DayForecastView(weatherKitManager: weatherKitManager)
+                            
+                            WeatherAttributionView(weatherKitManager: weatherKitManager)
+                            
                         }
                     }
                     .padding(.top, 120)

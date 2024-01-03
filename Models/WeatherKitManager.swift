@@ -21,6 +21,7 @@ class WeatherKitManager {
     var weatherAlert: WeatherAlert?
     var weatherMetadata: WeatherMetadata?
     var city: String = "Location is not available"
+    var attribution: WeatherAttribution?
 
     func getWeather(placemark: MKPlacemark? = nil) async {
         do {
@@ -36,6 +37,9 @@ class WeatherKitManager {
                 let forecast = try await Task.detached(priority: .userInitiated) {
                     return try await WeatherService.shared.weather(for: .init(latitude: latitude, longitude: longitude), including: .daily(startDate: currentTime, endDate: aWeekLater), .current, .alerts, .hourly(startDate: currentTime, endDate: twelveHoursLater))
                 }.value
+                let attrib = try await Task.detached(priority: .userInitiated) {
+                    return try await WeatherService.shared.attribution
+                }.value
                 
                 DispatchQueue.main.async {
                     self.currentWeather = forecast.1
@@ -43,17 +47,17 @@ class WeatherKitManager {
                     self.weatherAlert = forecast.2?.first
                     self.hourWeather = forecast.3.forecast
                     self.fetchAddress()
+                    self.attribution = attrib
                 }
-                
+
             }
-            
             
         } catch {
             print("Error fetching weather: \(error)")
             fatalError("\(error)")
         }
-        
     }
+    
     
     var symbol: String {
         currentWeather?.symbolName ?? "xmark"
