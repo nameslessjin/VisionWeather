@@ -10,6 +10,7 @@ import RealityKit
 import RealityKitContent
 import CoreLocation
 import SpriteKit
+import MapKit
 
 struct ContentView: View {
 
@@ -18,6 +19,9 @@ struct ContentView: View {
 
     @Environment(\.openImmersiveSpace) var openImmersiveSpace
     @Environment(\.dismissImmersiveSpace) var dismissImmersiveSpace
+    
+    @FocusState var isTextFieldFocus: Bool
+    @Binding var selectedPlacemark: MKPlacemark?
     
     var weatherKitManager: WeatherKitManager
     
@@ -61,23 +65,32 @@ struct ContentView: View {
                 showSpriteView(size: geometry.size)
                     .ignoresSafeArea()
                 
-                ScrollView(.vertical, showsIndicators: false) {
-                    
-                    MainTextView(weatherKitManager: weatherKitManager)
-                        .padding(.vertical)
-                    
-                    if weatherKitManager.alert != nil {
-                        NewsView(news: weatherKitManager.alert ?? "No News")
-                    }
-                    
-                    WeatherConditionView(weatherKitManager: weatherKitManager)
+                ZStack(alignment: .top) {
+                    VStack {
+                        ScrollView(.vertical, showsIndicators: false) {
+                            MainTextView(weatherKitManager: weatherKitManager)
+                                .padding(.vertical)
+                            
+                            if weatherKitManager.alert != nil {
+                                NewsView(news: weatherKitManager.alert ?? "No News")
+                            }
+                            
+                            WeatherConditionView(weatherKitManager: weatherKitManager)
 
-                    HourlyForecastView(weatherKitManager: weatherKitManager)
+                            HourlyForecastView(weatherKitManager: weatherKitManager)
+                            
+                            DayForecastView(weatherKitManager: weatherKitManager)
+                        }
+                    }
+                    .padding(.top, 120)
                     
-                    DayForecastView(weatherKitManager: weatherKitManager)
+                    LocationSearchView(selectedPlacemark: $selectedPlacemark, isTextFieldFocus: _isTextFieldFocus)
                 }
                 .padding()
                 .frame(width: geometry.size.width * 0.8)
+            }
+            .onTapGesture {
+                isTextFieldFocus = false
             }
         }
         .task {
@@ -110,8 +123,7 @@ struct ContentView: View {
 #Preview(windowStyle: .automatic) {
     
     let weatherKitManager = WeatherKitManager()
-    
-    ContentView(weatherKitManager: weatherKitManager)
+    ContentView(selectedPlacemark: .constant(nil), weatherKitManager: weatherKitManager)
         .task {
             await weatherKitManager.getWeather()
         }

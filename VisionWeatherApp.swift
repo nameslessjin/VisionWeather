@@ -7,19 +7,28 @@
 
 import SwiftUI
 import CoreLocation
-
+import MapKit
 
 @main
 struct VisionWeatherApp: App {
     
     var weatherKitManager = WeatherKitManager()
+    @State var selectedPlacemark: MKPlacemark?
     
     var body: some Scene {
         
         WindowGroup {
-            ContentView(weatherKitManager: weatherKitManager)
-                .task {
-                    await weatherKitManager.getWeather()
+            ContentView(selectedPlacemark: $selectedPlacemark, weatherKitManager: weatherKitManager)
+//            LocationSearchView()
+                .onAppear() {
+                    Task {
+                        await weatherKitManager.getWeather(placemark: selectedPlacemark)
+                    }
+                }
+                .onChange(of: selectedPlacemark) { _, _ in
+                    Task {
+                        await weatherKitManager.getWeather(placemark: selectedPlacemark)
+                    }
                 }
         }
         .defaultSize(width: 1500, height: 900)

@@ -9,6 +9,7 @@ import Foundation
 import WeatherKit
 import CoreLocation
 import Observation
+import MapKit
 
 @Observable
 class WeatherKitManager {
@@ -21,16 +22,19 @@ class WeatherKitManager {
     var weatherMetadata: WeatherMetadata?
     var city: String = "Location is not available"
 
-    func getWeather() async {
+    func getWeather(placemark: MKPlacemark? = nil) async {
         do {
             let currentTime = Date()
             let calendar = Calendar.current
+            
+            let latitude = placemark?.coordinate.latitude ?? 37.322998
+            let longitude = placemark?.coordinate.longitude ?? -122.032181
             
             if let twelveHoursLater = calendar.date(byAdding: .hour, value: 11, to: currentTime),
                let aWeekLater = calendar.date(byAdding: .day, value: 6, to: currentTime)
             {
                 let forecast = try await Task.detached(priority: .userInitiated) {
-                    return try await WeatherService.shared.weather(for: .init(latitude: 37.322998, longitude: -122.032181), including: .daily(startDate: currentTime, endDate: aWeekLater), .current, .alerts, .hourly(startDate: currentTime, endDate: twelveHoursLater))
+                    return try await WeatherService.shared.weather(for: .init(latitude: latitude, longitude: longitude), including: .daily(startDate: currentTime, endDate: aWeekLater), .current, .alerts, .hourly(startDate: currentTime, endDate: twelveHoursLater))
                 }.value
                 
                 DispatchQueue.main.async {
